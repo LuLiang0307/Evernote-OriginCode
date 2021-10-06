@@ -4,17 +4,37 @@
       <div class="modal-container">
         <div class="main"></div>
         <div class="form">
-          <h3>创建账户</h3>
-          <div v-show="true" class="register">
-            <input type="text" placeholder="用户名" />
-            <input type="password" placeholder="密码" />
-            <div class="button">创建账号</div>
+          <h3 @click="showRegister">创建账户</h3>
+          <div v-show="isShowRegister" class="register">
+            <input
+              type="text"
+              v-model="register.username"
+              placeholder="用户名"
+            />
+            <input
+              type="password"
+              v-model="register.password"
+              placeholder="密码"
+            />
+            <p v-bind:class="{ error: register.isError }">
+              {{ register.notice }}
+            </p>
+            <div class="button" @click="onRegister">创建账号</div>
           </div>
-          <h3>登录</h3>
-          <div v-show="false" class="login">
-            <input type="text" placeholder="输入用户名" />
-            <input type="password" placeholder="密码" />
-            <div class="button">登录</div>
+          <h3 @click="showLogin">登录</h3>
+          <div v-show="isShowLogin" class="login">
+            <input
+              type="text"
+              v-model="login.username"
+              placeholder="输入用户名"
+            />
+            <input
+              type="password"
+              v-model="login.password"
+              placeholder="密码"
+            />
+            <p v-bind:class="{ error: login.isError }">{{ login.notice }}</p>
+            <div class="button" @click="onLogin">登录</div>
           </div>
         </div>
       </div>
@@ -22,7 +42,93 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  name: "Login",
+  data() {
+    return {
+      isShowLogin: true,
+      isShowRegister: false,
+      login: {
+        username: "",
+        password: "",
+        notice: "请输入用户名和密码",
+        isError: false,
+      },
+      register: {
+        username: "",
+        password: "",
+        notice: "创建账户后请记住用户名和密码",
+        isError: false,
+      },
+    };
+  },
+  methods: {
+    showRegister() {
+      this.isShowRegister = true;
+      this.isShowLogin = false;
+    },
+    showLogin() {
+      this.isShowRegister = false;
+      this.isShowLogin = true;
+    },
+    onRegister() {
+      let usernameValidResult = this.validUsername(this.register.username);
+      if (!usernameValidResult.isValid) {
+        this.register.isError = true
+        this.register.notice = usernameValidResult.notice;
+        return;
+      }
+      let passwordValidResult = this.validPassword(this.register.password);
+      if (!passwordValidResult.isValid) {
+        this.register.isError = true
+        this.register.notice = passwordValidResult.notice;
+        return;
+      }
+      this.register.isError = false;
+      this.register.notice = "";
+      console.log(
+        "开始注册，用户名是" +
+          this.register.username +
+          "密码是" +
+          this.register.password
+      );
+    },
+    onLogin() {
+      let usernameValidResult = this.validUsername(this.login.username);
+      if (!usernameValidResult.isValid) {
+        this.login.isError =true
+        this.login.notice = usernameValidResult.notice;
+        return;
+      }
+      let passwordValidResult = this.validPassword(this.login.password);
+      if (!passwordValidResult.isValid) {
+        this.login.isError = true;
+        this.login.notice = passwordValidResult.notice;
+        return;
+      }
+      this.login.isError = false;
+      this.login.notice = "";
+      console.log(
+        "开始登录，用户名是" +
+          this.login.username +
+          "密码是" +
+          this.login.password
+      );
+    },
+    validUsername(username) {
+      return {
+        isValid: /^[a-zA-Z_0-9\u4e00-\u9fa5]{3,15}$/.test(username),
+        notice: "用户名必须是3~15个字符，限于字母数字下划线中文",
+      };
+    },
+    validPassword(password) {
+      return {
+        isValid: /^.{6,16}$/.test(password),
+        notice: "密码长度必须为6~16个字符",
+      };
+    },
+  },
+};
 </script>
 <style lang="less">
 .modal-mask {
@@ -70,6 +176,7 @@ export default {};
       font-size: 16px;
       border-top: 1px solid #eee;
       cursor: pointer;
+      text-align: left;
 
       &:nth-of-type(2) {
         border-bottom: 1px solid #eee;
@@ -110,6 +217,7 @@ export default {};
       }
 
       p {
+        text-align: left;
         font-size: 12px;
         margin-top: 10px;
         color: #444;
