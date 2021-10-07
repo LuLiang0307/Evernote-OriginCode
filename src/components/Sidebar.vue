@@ -11,9 +11,9 @@
       <router-link to="/trash/2" title="回收站"
         ><i class="iconfont icon-trash"></i
       ></router-link>
-    </div>
-    <div class="logout" @click="onLogout">
-      <i class="iconfont icon-logout"></i>
+      <div class="logout" @click="onLogout">
+        <i class="iconfont icon-logout"></i>
+      </div>
     </div>
   </div>
 </template>
@@ -35,7 +35,7 @@ export default {
   text-align: center;
   background-color: #2c333c;
   .icons {
-    margin-top: 15px;
+    margin: 15px 0;
     a {
       padding: 6px 0;
       display: block;
