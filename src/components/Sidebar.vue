@@ -11,8 +11,8 @@
       <router-link to="/trash/2" title="回收站"
         ><i class="iconfont icon-trash"></i
       ></router-link>
-      <div class="logout" @click="onLogout">
-        <i class="iconfont icon-logout"></i>
+      <div class="logout" title="注销">
+        <i class="iconfont icon-logout"  @click="logout"></i>
       </div>
     </div>
   </div>
@@ -20,10 +20,19 @@
 
 <script>
 import avatar from "@/components/Avatar";
+import Auth from "@/apis/auth";
 
 export default {
   components: {
     avatar,
+  },
+  methods: {
+    logout() {
+      console.log("logout");
+      Auth.logout().then((data) => {
+        console.log(data);
+      });
+    },
   },
 };
 </script>
@@ -55,5 +64,6 @@ export default {
 
 .iconfont {
   color: #fff;
+  font-size: 20px;
 }
 </style>

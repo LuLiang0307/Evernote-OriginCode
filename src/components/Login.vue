@@ -46,6 +46,14 @@
   </div>
 </template>
 <script>
+import Auth from '@/apis/auth';
+
+  Auth.getInfo()
+    .then(data => {
+      console.log(data)
+    })
+
+
 export default {
   name: "Login",
   data() {
@@ -96,6 +104,12 @@ export default {
           "密码是" +
           this.register.password
       );
+      Auth.register({
+            username: this.register.username, 
+            password: this.register.password
+          }).then(data => {
+            console.log(data)
+          })
     },
     onLogin() {
       let usernameValidResult = this.validUsername(this.login.username);
@@ -118,6 +132,12 @@ export default {
           "密码是" +
           this.login.password
       );
+        Auth.login({
+            username: this.login.username, 
+            password: this.login.password
+          }).then(data => {
+            console.log(data)
+          })
     },
     validUsername(username) {
       return {
