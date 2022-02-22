@@ -25,7 +25,7 @@
           </transition>
           <h3 @click="showLogin">登录</h3>
           <transition name="slide">
-            <div v-bind:class="{show: isShowLogin}" class="login">
+            <div v-bind:class="{ show: isShowLogin }" class="login">
               <input
                 type="text"
                 v-model="login.username"
@@ -46,13 +46,11 @@
   </div>
 </template>
 <script>
-import Auth from '@/apis/auth';
+import Auth from "@/apis/auth";
 
-  Auth.getInfo()
-    .then(data => {
-      console.log(data)
-    })
-
+Auth.getInfo().then((data) => {
+  console.log(data);
+});
 
 export default {
   name: "Login",
@@ -96,20 +94,20 @@ export default {
         this.register.notice = passwordValidResult.notice;
         return;
       }
-      this.register.isError = false;
-      this.register.notice = "";
-      console.log(
-        "开始注册，用户名是" +
-          this.register.username +
-          "密码是" +
-          this.register.password
-      );
+      //注册
       Auth.register({
-            username: this.register.username, 
-            password: this.register.password
-          }).then(data => {
-            console.log(data)
-          })
+        username: this.register.username,
+        password: this.register.password,
+      })
+        .then((data) => {
+          this.register.isError = false;
+          this.register.notice = "";
+          this.$router.push("notebooks");
+        })
+        .catch((data) => {
+          this.login.isError = true;
+          this.login.notice = data.msg;
+        });
     },
     onLogin() {
       let usernameValidResult = this.validUsername(this.login.username);
@@ -124,20 +122,20 @@ export default {
         this.login.notice = passwordValidResult.notice;
         return;
       }
-      this.login.isError = false;
-      this.login.notice = "";
-      console.log(
-        "开始登录，用户名是" +
-          this.login.username +
-          "密码是" +
-          this.login.password
-      );
-        Auth.login({
-            username: this.login.username, 
-            password: this.login.password
-          }).then(data => {
-            console.log(data)
-          })
+      //登录
+      Auth.login({
+        username: this.login.username,
+        password: this.login.password,
+      })
+        .then((data) => {
+          this.login.isError = false;
+          this.login.notice = "";
+          this.$router.push("notebooks");
+        })
+        .catch((data) => {
+          this.login.isError = true;
+          this.login.notice = data.msg;
+        });
     },
     validUsername(username) {
       return {

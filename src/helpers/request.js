@@ -5,7 +5,7 @@ console.log(baseURLConfig)
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 axios.defaults.baseURL = baseURLConfig.baseURL
-axios.defaults.withCredentials = true //即使是跨域也使用credentials
+axios.defaults.withCredentials = true //即使是跨域也允许携带cookie
 
 export default function request(url, type = 'GET', data = {}) {
     return new Promise((resolve, reject) => {
