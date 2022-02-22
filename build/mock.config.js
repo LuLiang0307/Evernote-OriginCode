@@ -2,8 +2,8 @@ const fs = require('fs')
 const path = require('path')
 
 // const mockBaseURL = 'http://localhost:3000'
-const mockBaseURL = '//note-server.hunger-valley.com' //开发
-const realBaseURL = '//note-server.hunger-valley.com' //发布
+const mockBaseURL = 'https://note-server.hunger-valley.com' //开发
+const realBaseURL = 'https://note-server.hunger-valley.com' //发布
 
 exports.config = function({ isDev = true } = { isDev: true }) { //当isDev没有被赋值时，默认为true
     let fileTxt = `
