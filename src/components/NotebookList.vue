@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import Auth from '@/apis/auth';
 export default {
   name: "Login",
   data() {
@@ -16,6 +17,14 @@ export default {
       msg: "笔记本列表",
     };
   },
+  created(){
+    Auth.getInfo()
+    .then(res=>{
+      if(!res.isLogin){
+        this.$router.push('login')
+      }
+    })
+  }
 };
 </script>
 

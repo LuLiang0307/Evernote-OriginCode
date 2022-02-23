@@ -1,18 +1,26 @@
 <template>
   <div id="trash-detail">
-    <h1>{{msg}} : {{ $route.params.noteId }}</h1>
+    <h1>{{ msg }} : {{ $route.params.noteId }}</h1>
   </div>
 </template>
 
 <script>
+import Auth from "@/apis/auth";
 export default {
-  name: 'Login',
-  data () {
+  name: "Login",
+  data() {
     return {
-      msg: '回收站笔记详情页'
-    }
-  }
-}
+      msg: "回收站笔记详情页",
+    };
+  },
+  created() {
+    Auth.getInfo().then((res) => {
+      if (!res.isLogin) {
+        this.$router.push("login");
+      }
+    });
+  },
+};
 </script>
 
 <style scoped>

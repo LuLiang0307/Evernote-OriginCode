@@ -50,7 +50,7 @@ export default {
       padding: 6px 0;
       display: block;
     }
-    &.router-link-active {
+    .router-link-active {
       background-color: #5e6266;
     }
     .logout {
