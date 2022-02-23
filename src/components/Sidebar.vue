@@ -21,6 +21,7 @@
 <script>
 import avatar from "@/components/Avatar";
 import Auth from "@/apis/auth";
+import Bus from '@/helpers/bus';
 
 export default {
   components: {
@@ -29,6 +30,7 @@ export default {
   methods: {
     logout() {
       Auth.logout().then((data) => {
+        Bus.$emit('userInfo',{username:"未登录"})
         this.$router.push('login')
       });
     },

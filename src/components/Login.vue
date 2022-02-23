@@ -47,10 +47,10 @@
 </template>
 <script>
 import Auth from "@/apis/auth";
-
-Auth.getInfo().then((data) => {
-  console.log(data);
-});
+import Bus from '@/helpers/bus';
+// Auth.getInfo().then((data) => {
+//   console.log(data);
+// });
 
 export default {
   name: "Login",
@@ -130,6 +130,7 @@ export default {
         .then((data) => {
           this.login.isError = false;
           this.login.notice = "";
+          Bus.$emit('userInfo',{username: this.login.username})
           this.$router.push("notebooks");
         })
         .catch((data) => {
