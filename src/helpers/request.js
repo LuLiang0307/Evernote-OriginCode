@@ -1,5 +1,6 @@
 import axios from 'axios'
 import baseURLConfig from './config-baseURL'
+import { Message } from 'element-ui'
 
 console.log(baseURLConfig)
 
@@ -25,7 +26,7 @@ export default function request(url, type = 'GET', data = {}) {
             if (res.status === 200) {
                 resolve(res.data)
             } else {
-                console.error(res.data)
+                Message.error(res.data.msg)
                 reject(res.data)
             }
         }).catch(err => {
