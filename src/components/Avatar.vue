@@ -46,6 +46,6 @@ span {
   font-weight: bold;
   text-transform: uppercase;
   font-size: 18px;
-  margin-top: 15px;
+  margin: 15px 0;
 }
 </style>
