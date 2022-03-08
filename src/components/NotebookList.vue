@@ -25,9 +25,11 @@
             :key="index"
           >
             <el-col :span="6">
-              <span class="iconfont icon-notebook"></span>
-              {{ notebook.title }}
-              <span>{{ notebook.noteCounts }}</span>
+              <router-link :to="`/note?notebookId=${notebook.id}`">
+                <span class="iconfont icon-notebook"></span>
+                {{ notebook.title }}
+                <span>{{ notebook.noteCounts }}</span>
+              </router-link>
             </el-col>
             <el-col :span="3" :offset="15">
               <span class="date">{{ friendlyDate(notebook.updatedAt) }}</span>
@@ -89,7 +91,7 @@ export default {
         cancelButtonText: "取消",
         inputPattern: /^.{1,30}$/,
         inputErrorMessage: "标题不能为空，且不超过30个字符",
-        inputPlaceholder:'标题不能为空，且不超过30个字符'
+        inputPlaceholder: "标题不能为空，且不超过30个字符",
       })
         .then(({ value }) => {
           return Notebooks.addNoteBook({ title: value });
@@ -97,7 +99,7 @@ export default {
         .then((res) => {
           this.init();
           // this.notebooks.unshift(res.data)
-          this.$message.success( res.msg);
+          this.$message.success(res.msg);
         });
     },
     onEdit(notebook) {
@@ -107,15 +109,15 @@ export default {
         inputPattern: /^.{1,30}$/,
         inputValue: notebook.title,
         inputErrorMessage: "标题不能为空，且不超过30个字符",
-        inputPlaceholder:'标题不能为空，且不超过30个字符'
+        inputPlaceholder: "标题不能为空，且不超过30个字符",
       })
         .then(({ value }) => {
           return Notebooks.updateNoteBook(notebook.id, { title: value });
         })
         .then((res) => {
-          this.$message.success( res.msg);
+          this.$message.success(res.msg);
           this.init();
-        })
+        });
     },
     onDelete(id) {
       this.$confirm("确认要删除笔记本吗？", "删除笔记本", {
@@ -123,14 +125,14 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       })
-      .then(() => {
-        return Notebooks.deleteNoteBook(id);
-      })
-      .then((res) => {
-        this.$message.success(res.msg);
-        this.init();
-        // this.notebooks.splice(this.notebooks.indexOf(notebook),1)
-      })
+        .then(() => {
+          return Notebooks.deleteNoteBook(id);
+        })
+        .then((res) => {
+          this.$message.success(res.msg);
+          this.init();
+          // this.notebooks.splice(this.notebooks.indexOf(notebook),1)
+        });
     },
   },
 };
