@@ -1,9 +1,21 @@
 <template>
   <div id="note" class="detail"> 
-    <NoteSidebar/>
-    <div id="note-detail">
-      <h1> noteId: {{ $route.query.noteId }}</h1>
-      <h1> notebookId: {{ $route.query.notebookId }}</h1>
+    <NoteSidebar @noteInfo="shownNoteInfo"/>
+    <div class="note-detail">
+      <div class="note-bar">
+        <span>创建日期：{{friendlyDate(curNote.createdAt)}}</span>
+        <span>更新日期：{{friendlyDate(curNote.updatedAt)}}</span>
+        <span>已保存</span>
+        <span class="iconfont icon-delete"></span>
+        <span class="iconfont icon-fullscreen"></span>
+      </div>
+      <div class="note-title">
+        <input type="text" :value="curNote.title" placeholder="输入标题">
+      </div>
+      <div class="editor">
+        <textarea v-show='true' :value="curNote.content" placeholder="输入内容，支持 markdown 语法" name="" id="" cols="30" rows="10"></textarea>
+        <div class="preview markdown-body" v-html="" v-show="false"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -11,6 +23,7 @@
 <script>
 import Auth from "@/apis/auth";
 import NoteSidebar from '@/components/NoteSidebar.vue';
+import {friendlyDate} from '@/helpers/utils';
 
 export default {
   name: "Login",
@@ -19,7 +32,13 @@ export default {
   },
   data() {
     return {
-      msg: "笔记详情页",
+      curNote: {
+        title:'',
+        createdAt:'',
+        updatedAt:'',
+        content:''
+      },
+
     };
   },
   created() {
@@ -29,14 +48,22 @@ export default {
       }
     });
   },
+  methods:{
+    friendlyDate,
+    shownNoteInfo(data){
+      console.log(data)
+      this.curNote = data
+    }
+  }
 };
 </script>
 
-<style scoped>
-h1 {
-  color: blue;
-}
-.detail{
+<style lang="less" scoped>
+@import url(../assets/css/note-detail.less);
+#note {
   display: flex;
+  align-items: stretch;
+  background-color: #fff;
+  flex: 1;
 }
 </style>

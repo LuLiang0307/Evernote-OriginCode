@@ -6,7 +6,7 @@
       placement="bottom"
     >
       <span class="el-dropdown-link">
-        {{notebooksTile}}<i class="el-icon-arrow-down el-icon--right"></i>
+        {{ curBook.title }}<i class="el-icon-arrow-down el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item
@@ -21,17 +21,25 @@
     </el-dropdown>
     <el-button classs="btn add-note" size="small">添加笔记</el-button>
     <div class="menu">
-      <el-table class="menu" :data="notes" :row-style="{height:0+'px'}" :cell-style="{padding:0+'px'}" style="width:100%">
+      <el-table
+        class="menu"
+        :data="notes"
+        :row-style="{ height: 0 + 'px' }"
+        :cell-style="{ padding: 0 + 'px' }"
+        style="width: 100%"
+        :highlight-current-row="true"
+        @row-click="handleRowClick"
+      >
         <el-table-column prop="updatedAt" label="更新时间">
           <template slot-scope="scope">
             <div>
-              {{friendlyDate(scope.row.updatedAt)}}
-             </div>
+              {{ friendlyDate(scope.row.updatedAt) }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="title" label="标题">
-            <template slot-scope="scope">
-              <router-link  :to="`/note?noteId=${scope.row.id}`">{{scope.row.title}}</router-link>
+          <template slot-scope="scope">
+            {{ scope.row.title }}
           </template>
         </el-table-column>
       </el-table>
@@ -39,46 +47,54 @@
   </div>
 </template>
 <script>
-import Notebooks from '@/apis/notebooks';
-import Notes from '@/apis/notes'
-import {friendlyDate} from '@/helpers/utils';
+import Notebooks from "@/apis/notebooks";
+import Notes from "@/apis/notes";
+import { friendlyDate } from "@/helpers/utils";
 
 export default {
   data() {
     return {
-      notebooksTile:'笔记本列表',
+      curBook: {},
       notebooks: {},
-      notes: [{
-          id:1,
-          updatedAt: '2016-05-02',
-          title: '王小虎',
-        }, {
-          id:2,
-          updatedAt: '2016-05-04',
-          title: '王小虎',
-        }],
+      notes: [],
     };
   },
-  created(){
-    Notebooks.getAll().then(res=>{
-      this.notebooks = res.data
-      this.notebooksTile = this.notebooks[0].title
-    }).then(()=>{
-      Notes.getAll({notebookId: this.notebooks[0].id}).then(res=>{
-        this.notes = res.data
+  created() {
+    Notebooks.getAll()
+      .then((res) => {
+        this.notebooks = res.data;
+        this.curBook =
+          this.notebooks.find(
+            (notebook) => notebook.id == this.$route.query.notebookId
+          ) ||
+          this.notebooks[0] ||
+          {};
+        console.log(this.curBook);
+        return Notes.getAll({ notebookId: this.curBook.id });
       })
-    })
+      .then((res) => {
+        this.notes = res.data;
+        console.log("notes", this.notes);
+      });
   },
   methods: {
     friendlyDate,
     handleCommand(notebookId) {
-      if(notebookId!=='trash'){
-        Notes.getAll({notebookId})
-          .then(res=>{
-            this.notes = res.data
-          })
+      if (notebookId == "trash") {
+        this.$router.push({ path: "/trash" });
       }
-      
+      this.curBook = this.notebooks.find(
+        (notebook) => notebook.id === notebookId
+      );
+      Notes.getAll({ notebookId }).then((res) => {
+        this.notes = res.data;
+      });
+    },
+    handleRowClick(row) {
+      this.$router.push({
+        path: `/note?noteId=${row.id}&notebookId=${this.curBook.id}`,
+      });
+      this.$emit("noteInfo", row);
     },
   },
 };

@@ -31,7 +31,7 @@
                 <span>{{ notebook.noteCounts }}</span>
               </router-link>
             </el-col>
-            <el-col :span="3" :offset="15">
+            <el-col :span="4" :offset="15">
               <span class="date">{{ friendlyDate(notebook.updatedAt) }}</span>
               <span class="action"
                 ><el-button
@@ -92,6 +92,7 @@ export default {
         inputPattern: /^.{1,30}$/,
         inputErrorMessage: "标题不能为空，且不超过30个字符",
         inputPlaceholder: "标题不能为空，且不超过30个字符",
+        closeOnClickModal:false //点击遮罩层是否关闭弹窗
       })
         .then(({ value }) => {
           return Notebooks.addNoteBook({ title: value });
@@ -100,7 +101,7 @@ export default {
           this.init();
           // this.notebooks.unshift(res.data)
           this.$message.success(res.msg);
-        });
+        }).catch(()=>{})
     },
     onEdit(notebook) {
       this.$prompt("输入新笔记本标题", "修改笔记本", {
@@ -110,6 +111,7 @@ export default {
         inputValue: notebook.title,
         inputErrorMessage: "标题不能为空，且不超过30个字符",
         inputPlaceholder: "标题不能为空，且不超过30个字符",
+        closeOnClickModal: false //点击遮罩层是否关闭弹窗
       })
         .then(({ value }) => {
           return Notebooks.updateNoteBook(notebook.id, { title: value });
@@ -117,13 +119,14 @@ export default {
         .then((res) => {
           this.$message.success(res.msg);
           this.init();
-        });
+        }).catch(()=>{})
     },
     onDelete(id) {
       this.$confirm("确认要删除笔记本吗？", "删除笔记本", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
+        closeOnClickModal: false //点击遮罩层是否关闭弹窗
       })
         .then(() => {
           return Notebooks.deleteNoteBook(id);
@@ -132,7 +135,7 @@ export default {
           this.$message.success(res.msg);
           this.init();
           // this.notebooks.splice(this.notebooks.indexOf(notebook),1)
-        });
+        }).catch(()=>{})
     },
   },
 };

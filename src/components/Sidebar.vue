@@ -1,18 +1,30 @@
 <template>
   <div id="sidebar">
-    <el-menu class="icons" background-color="#404040" default-active="2">
+    <el-menu
+      class="icons"
+      background-color="#404040"
+      :default-active="activeIndex"
+      :router="true"
+    >
       <avatar></avatar>
-      <el-menu-item index="1">
-        <router-link to="/note" title="笔记"><i class="iconfont icon-note"></i><span> 笔记页</span></router-link>
+      <!-- <el-menu-item v-for="(nav,index) in navs" :key="index" :index="nav.path" :router="true">
+        <i :class="'iconfont icon-'+`${nav.icon}`"></i>
+        <span>{{nav.title}}</span>
+      </el-menu-item> -->
+
+      <el-menu-item index="/note">
+          <i class="iconfont icon-note"></i><span> 笔记页</span>
       </el-menu-item>
-      <el-menu-item index="2">
-        <router-link to="/notebooks" title="笔记本"><i class="iconfont icon-notebook"></i><span> 笔记本</span></router-link>
+      <el-menu-item index="/notebooks">
+          <i class="iconfont icon-notebook"></i><span> 笔记本</span>
       </el-menu-item>
-      <el-menu-item index="3">
-        <router-link to="/trash" title="回收站"><i class="iconfont icon-trash"></i><span> 回收站</span></router-link>
+      <el-menu-item index="/trash">
+          <i class="iconfont icon-trash"></i><span> 回收站</span>
       </el-menu-item>
       <el-menu-item index="4" class="logout">
-        <div title="注销"><i class="iconfont icon-logout" @click="logout"></i><span> 注销</span></div>
+        <div title="注销">
+          <i class="iconfont icon-logout" @click="logout"></i><span> 注销</span>
+        </div>
       </el-menu-item>
     </el-menu>
     <!-- <div class="icons">
@@ -35,17 +47,27 @@
 <script>
 import avatar from "@/components/Avatar";
 import Auth from "@/apis/auth";
-import Bus from '@/helpers/bus';
+import Bus from "@/helpers/bus";
 
 export default {
   components: {
     avatar,
   },
+  data() {
+    return {
+    };
+  },
+  computed: {
+    activeIndex() {
+      let activeIndex = "2";
+      return activeIndex;//实现子路由转换也高亮
+    },
+  },
   methods: {
     logout() {
       Auth.logout().then((data) => {
-        Bus.$emit('userInfo',{username:"未登录"})
-        this.$router.push('login')
+        Bus.$emit("userInfo", { username: "未登录" });
+        this.$router.push("login");
       });
     },
   },
@@ -54,16 +76,14 @@ export default {
 
 <style lang="less" scoped>
 #sidebar {
-//   position: relative;
+  //   position: relative;
   width: 140px;
   text-align: center;
-  .icons{
+  .icons {
     height: 100%;
-    .el-menu-item{
-      a,div{
+    .el-menu-item {
         color: #fff;
-      }
-      &.is-active{
+      &.is-active {
         background-color: #666666 !important;
       }
       &.logout {
