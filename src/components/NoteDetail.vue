@@ -1,20 +1,23 @@
 <template>
   <div id="note" class="detail"> 
     <NoteSidebar @noteInfo="shownNoteInfo"/>
-    <div class="note-detail">
-      <div class="note-bar">
-        <span>创建日期：{{friendlyDate(curNote.createdAt)}}</span>
-        <span>更新日期：{{friendlyDate(curNote.updatedAt)}}</span>
-        <span>已保存</span>
-        <span class="iconfont icon-delete"></span>
-        <span class="iconfont icon-fullscreen"></span>
-      </div>
-      <div class="note-title">
-        <input type="text" :value="curNote.title" placeholder="输入标题">
-      </div>
-      <div class="editor">
-        <textarea v-show='true' :value="curNote.content" placeholder="输入内容，支持 markdown 语法" name="" id="" cols="30" rows="10"></textarea>
-        <div class="preview markdown-body" v-show="false"></div>
+      <div class="note-detail">
+    <div class="note-empty" v-show="!curNote.id">请选择笔记</div>
+    <div v-show="curNote.id">
+        <div class="note-bar">
+          <span>创建日期：{{friendlyDate(curNote.createdAt)}}</span>
+          <span>更新日期：{{friendlyDate(curNote.updatedAt)}}</span>
+          <span>已保存</span>
+          <span class="iconfont icon-delete"></span>
+          <span class="iconfont icon-fullscreen"></span>
+        </div>
+        <div class="note-title">
+          <input type="text" :value="curNote.title" placeholder="输入标题">
+        </div>
+        <div class="editor">
+          <textarea v-show='true' :value="curNote.content" placeholder="输入内容，支持 markdown 语法" name="" id="" cols="30" rows="10"></textarea>
+          <div class="preview markdown-body" v-show="false"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -55,7 +58,6 @@ export default {
   methods:{
     friendlyDate,
     shownNoteInfo(data){
-      console.log(data)
       this.curNote = data
     }
   }
