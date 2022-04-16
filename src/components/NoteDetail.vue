@@ -14,7 +14,7 @@
       </div>
       <div class="editor">
         <textarea v-show='true' :value="curNote.content" placeholder="输入内容，支持 markdown 语法" name="" id="" cols="30" rows="10"></textarea>
-        <div class="preview markdown-body" v-html="" v-show="false"></div>
+        <div class="preview markdown-body" v-show="false"></div>
       </div>
     </div>
   </div>
@@ -24,6 +24,7 @@
 import Auth from "@/apis/auth";
 import NoteSidebar from '@/components/NoteSidebar.vue';
 import {friendlyDate} from '@/helpers/utils';
+import Bus from '@/helpers/bus'
 
 export default {
   name: "Login",
@@ -47,6 +48,9 @@ export default {
         this.$router.push("login");
       }
     });
+    Bus.$once('noteInfo',val =>{
+      this.curNote = val.find(note=> note.id == this.$route.query.noteId) || {}
+    })
   },
   methods:{
     friendlyDate,

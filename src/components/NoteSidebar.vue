@@ -50,6 +50,7 @@
 import Notebooks from "@/apis/notebooks";
 import Notes from "@/apis/notes";
 import { friendlyDate } from "@/helpers/utils";
+import Bus from '@/helpers/bus'
 
 export default {
   data() {
@@ -74,7 +75,7 @@ export default {
       })
       .then((res) => {
         this.notes = res.data;
-        console.log("notes", this.notes);
+        Bus.$emit('noteInfo', this.notes)
       });
   },
   methods: {
