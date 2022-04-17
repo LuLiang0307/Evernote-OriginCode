@@ -19,7 +19,7 @@
         <el-dropdown-item command="trash">回收站</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
-    <el-button classs="btn add-note" size="small">添加笔记</el-button>
+    <el-button classs="btn add-note" size="small" @click="addNote">添加笔记</el-button>
     <div class="menu">
       <el-table
         class="menu"
@@ -95,8 +95,14 @@ export default {
       this.$router.push({
         path: `/note?noteId=${row.id}&notebookId=${this.curBook.id}`,
       });
-      this.$emit("noteInfo", row);
+      this.$emit("noteInfo", this.notes);
     },
+    addNote(){
+      Notes.addNote({notebookId: this.curBook.id})
+      .then(res=>{
+        this.notes.unshift(res.data)
+      })
+    }
   },
 };
 </script>

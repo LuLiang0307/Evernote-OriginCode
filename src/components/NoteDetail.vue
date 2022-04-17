@@ -1,21 +1,37 @@
 <template>
-  <div id="note" class="detail"> 
-    <NoteSidebar @noteInfo="shownNoteInfo"/>
-      <div class="note-detail">
-    <div class="note-empty" v-show="!curNote.id">请选择笔记</div>
-    <div v-show="curNote.id">
+  <div id="note" class="detail">
+    <NoteSidebar @noteInfo="shownNoteInfo" />
+    <div class="note-detail">
+      <div class="note-empty" v-show="!curNote.id">请选择笔记</div>
+      <div v-show="curNote.id">
         <div class="note-bar">
-          <span>创建日期：{{friendlyDate(curNote.createdAt)}}</span>
-          <span>更新日期：{{friendlyDate(curNote.updatedAt)}}</span>
-          <span>{{statusText}}</span>
-          <span class="iconfont icon-delete"></span>
+          <span>创建日期：{{ friendlyDate(curNote.createdAt) }}</span>
+          <span>更新日期：{{ friendlyDate(curNote.updatedAt) }}</span>
+          <span>{{ statusText }}</span>
+          <span class="iconfont icon-delete" @click="deleteNote"></span>
           <span class="iconfont icon-fullscreen"></span>
         </div>
         <div class="note-title">
-          <input type="text" v-model="curNote.title" @input="updateNote" @keydown="statusText='正在输入...'" placeholder="输入标题">
+          <input
+            type="text"
+            v-model="curNote.title"
+            @input="updateNote"
+            @keydown="statusText = '正在输入...'"
+            placeholder="输入标题"
+          />
         </div>
         <div class="editor">
-          <textarea v-show='true' v-model="curNote.content" @input="updateNote" @keydown="statusText='正在输入...'" placeholder="输入内容，支持 markdown 语法" name="" id="" cols="30" rows="30"></textarea>
+          <textarea
+            v-show="true"
+            v-model="curNote.content"
+            @input="updateNote"
+            @keydown="statusText = '正在输入...'"
+            placeholder="输入内容，支持 markdown 语法"
+            name=""
+            id=""
+            cols="30"
+            rows="30"
+          ></textarea>
           <div class="preview markdown-body" v-show="false"></div>
         </div>
       </div>
@@ -25,26 +41,27 @@
 
 <script>
 import Auth from "@/apis/auth";
-import Notes from '@/apis/notes'
-import NoteSidebar from '@/components/NoteSidebar.vue';
-import {friendlyDate} from '@/helpers/utils';
-import Bus from '@/helpers/bus'
-import _ from 'lodash'
+import Notes from "@/apis/notes";
+import NoteSidebar from "@/components/NoteSidebar.vue";
+import { friendlyDate } from "@/helpers/utils";
+import Bus from "@/helpers/bus";
+import _ from "lodash";
 
 export default {
   name: "Login",
-  components:{
-    NoteSidebar
+  components: {
+    NoteSidebar,
   },
   data() {
     return {
+      notes:[],
       curNote: {
-        title:'',
-        createdAt:'',
-        updatedAt:'',
-        content:''
+        title: "",
+        createdAt: "",
+        updatedAt: "",
+        content: "",
       },
-      statusText: '未改动'
+      statusText: "未改动",
     };
   },
   created() {
@@ -53,24 +70,38 @@ export default {
         this.$router.push("login");
       }
     });
-    Bus.$once('noteInfo',val =>{
-      this.curNote = val.find(note=> note.id == this.$route.query.noteId) || {}
-    })
+    Bus.$once("noteInfo", (val) => {
+      this.curNote =
+        val.find((note) => note.id == this.$route.query.noteId) || {};
+    });
   },
-  methods:{
+  methods: {
     friendlyDate,
-    shownNoteInfo(data){
-      this.curNote = data
+    shownNoteInfo(notes) {
+      this.notes = notes
+      this.curNote = this.notes.find(note => this.$route.query.noteId == note.id);
     },
-    updateNote: _.debounce(function() {
-      Notes.updateNote({noteId: this.curNote.id},{title: this.curNote.title,content: this.curNote.content})
-      .then(res=>{
-        this.statusText = '已保存'
-      }).catch((res)=>{
-        this.statusText ='保存失败'
-      })
-    }, 300)
-  }
+    updateNote: _.debounce(function () {
+      Notes.updateNote(
+        { noteId: this.curNote.id },
+        { title: this.curNote.title, content: this.curNote.content }
+      )
+        .then((res) => {
+          this.statusText = "已保存";
+        })
+        .catch((res) => {
+          this.statusText = "保存失败";
+        });
+    }, 300),
+    deleteNote() {
+      Notes.deleteNote({ noteId: this.curNote.id }).then((res) => {
+        this.$message.success({ message: res.msg });
+        this.notes.splice(this.notes.indexOf(this.curNote),1)
+        this.curNote = {}
+        this.$router.push({ path: "/note" });
+      });
+    },
+  },
 };
 </script>
 
