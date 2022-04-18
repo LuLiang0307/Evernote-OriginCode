@@ -3,13 +3,13 @@
     <NoteSidebar @noteInfo="shownNoteInfo" />
     <div class="note-detail">
       <div class="note-empty" v-show="!curNote.id">请选择笔记</div>
-      <div class="note" v-show="curNote.id">
+      <div class="note-detail-ct" v-show="curNote.id">
         <div class="note-bar">
           <span>创建日期：{{ friendlyDate(curNote.createdAt) }}</span>
           <span>更新日期：{{ friendlyDate(curNote.updatedAt) }}</span>
           <span>{{ statusText }}</span>
           <span class="iconfont icon-delete" @click="deleteNote"></span>
-          <span class="iconfont icon-fullscreen"></span>
+          <span class="iconfont icon-fullscreen" @click="isShowPreview = !isShowPreview"></span>
         </div>
         <div class="note-title">
           <input
@@ -22,13 +22,13 @@
         </div>
         <div class="editor">
           <textarea
-            v-show="true"
+            v-show="!isShowPreview"
             v-model="curNote.content"
             @input="updateNote"
             @keydown="statusText = '正在输入...'"
             placeholder="输入内容，支持 markdown 语法"
           ></textarea>
-          <div class="preview markdown-body" v-show="false"></div>
+          <div class="preview markdown-body" v-html="mdContent" v-show="isShowPreview"></div>
         </div>
       </div>
     </div>
@@ -42,6 +42,9 @@ import NoteSidebar from "@/components/NoteSidebar.vue";
 import { friendlyDate } from "@/helpers/utils";
 import Bus from "@/helpers/bus";
 import _ from "lodash";
+import MarkdownIt from 'markdown-it'
+
+let md = new MarkdownIt()
 
 export default {
   name: "Login",
@@ -58,6 +61,7 @@ export default {
         content: "",
       },
       statusText: "未改动",
+      isShowPreview: false
     };
   },
   created() {
@@ -70,6 +74,11 @@ export default {
       this.curNote =
         val.find((note) => note.id == this.$route.query.noteId) || {};
     });
+  },
+  computed:{
+    mdContent(){
+     return md.render(this.curNote.content)
+    }
   },
   methods: {
     friendlyDate,
