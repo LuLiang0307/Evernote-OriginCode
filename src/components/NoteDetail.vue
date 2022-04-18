@@ -3,7 +3,7 @@
     <NoteSidebar @noteInfo="shownNoteInfo" />
     <div class="note-detail">
       <div class="note-empty" v-show="!curNote.id">请选择笔记</div>
-      <div v-show="curNote.id">
+      <div class="note" v-show="curNote.id">
         <div class="note-bar">
           <span>创建日期：{{ friendlyDate(curNote.createdAt) }}</span>
           <span>更新日期：{{ friendlyDate(curNote.updatedAt) }}</span>
@@ -27,10 +27,6 @@
             @input="updateNote"
             @keydown="statusText = '正在输入...'"
             placeholder="输入内容，支持 markdown 语法"
-            name=""
-            id=""
-            cols="30"
-            rows="30"
           ></textarea>
           <div class="preview markdown-body" v-show="false"></div>
         </div>
