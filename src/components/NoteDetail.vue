@@ -12,22 +12,10 @@
           <span class="iconfont icon-fullscreen" @click="isShowPreview = !isShowPreview"></span>
         </div>
         <div class="note-title">
-          <input
-            type="text"
-            v-model="curNote.title"
-            @input="updateNote"
-            @keydown="statusText = '正在输入...'"
-            placeholder="输入标题"
-          />
+          <input type="text" v-model="curNote.title" @input="updateNote" @keydown="statusText = '正在输入...'" placeholder="输入标题"/>
         </div>
         <div class="editor">
-          <textarea
-            v-show="!isShowPreview"
-            v-model="curNote.content"
-            @input="updateNote"
-            @keydown="statusText = '正在输入...'"
-            placeholder="输入内容，支持 markdown 语法"
-          ></textarea>
+          <textarea v-show="!isShowPreview" v-model="curNote.content" @input="updateNote" @keydown="statusText = '正在输入...'" placeholder="输入内容，支持 markdown 语法"></textarea>
           <div class="preview markdown-body" v-html="mdContent" v-show="isShowPreview"></div>
         </div>
       </div>

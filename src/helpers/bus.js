@@ -9,6 +9,6 @@ export default new Vue()
 this.$emit('send', {data})
 
 this.$on('send',data=>{
-    console.log(data)
+  console.log(data)
 })
 */

@@ -2,40 +2,24 @@
   <div class="modal-mask">
     <div class="modal-wrapper">
       <div class="modal-container">
-        <div class="main"></div>
+        <div class="main">          
+        </div>
+
         <div class="form">
           <h3 @click="showRegister">创建账户</h3>
           <transition name="slide">
             <div v-bind:class="{ show: isShowRegister }" class="register">
-              <input
-                type="text"
-                v-model="register.username"
-                placeholder="用户名"
-              />
-              <input
-                type="password"
-                v-model="register.password"
-                placeholder="密码"
-              />
-              <p v-bind:class="{ error: register.isError }">
-                {{ register.notice }}
-              </p>
+              <input type="text" v-model="register.username" placeholder="用户名"/>
+              <input type="password" v-model="register.password" placeholder="密码"/>
+              <p v-bind:class="{ error: register.isError }">{{ register.notice }}</p>
               <div class="button" @click="onRegister">创建账号</div>
             </div>
           </transition>
           <h3 @click="showLogin">登录</h3>
           <transition name="slide">
             <div v-bind:class="{ show: isShowLogin }" class="login">
-              <input
-                type="text"
-                v-model="login.username"
-                placeholder="输入用户名"
-              />
-              <input
-                type="password"
-                v-model="login.password"
-                placeholder="密码"
-              />
+              <input type="text" v-model="login.username" placeholder="输入用户名"/>
+              <input type="password" v-model="login.password" placeholder="密码"/>
               <p v-bind:class="{ error: login.isError }">{{ login.notice }}</p>
               <div class="button" @click="onLogin">登录</div>
             </div>
@@ -48,9 +32,6 @@
 <script>
 import Auth from "@/apis/auth";
 import Bus from '@/helpers/bus';
-// Auth.getInfo().then((data) => {
-//   console.log(data);
-// });
 
 export default {
   name: "Login",
@@ -59,7 +40,7 @@ export default {
       isShowLogin: true,
       isShowRegister: false,
       login: {
-        username: "hunger",
+        username: "hunger1",
         password: "123456",
         notice: "请输入用户名和密码",
         isError: false,
