@@ -63,6 +63,12 @@ export default {
   },
   methods: {
     friendlyDate,
+    ...mapActions([
+      'getNotebooks',
+      'addNotebook',
+      'updateNotebook',
+      'deleteNotebook'
+    ]),
     onCreate() {
       this.$prompt("输入新笔记本标题", "创建笔记本", {
         confirmButtonText: "确定",
@@ -71,15 +77,10 @@ export default {
         inputErrorMessage: "标题不能为空，且不超过30个字符",
         inputPlaceholder: "标题不能为空，且不超过30个字符",
         closeOnClickModal: false, //点击遮罩层是否关闭弹窗
+      }).then(({ value }) => {
+        this.addNotebook({title: value})
+        // return Notebooks.addNoteBook({ title: value });
       })
-        .then(({ value }) => {
-          return Notebooks.addNoteBook({ title: value });
-        })
-        .then((res) => {
-          this.notebooks.unshift(res.data);
-          this.$message.success(res.msg);
-        })
-        .catch(() => {});
     },
     onEdit(notebook) {
       this.$prompt("输入新笔记本标题", "修改笔记本", {
@@ -90,14 +91,9 @@ export default {
         inputErrorMessage: "标题不能为空，且不超过30个字符",
         inputPlaceholder: "标题不能为空，且不超过30个字符",
         closeOnClickModal: false, //点击遮罩层是否关闭弹窗
+      }).then(({ value }) => {
+        this.updateNotebook({notebookId: notebook.id, title: value });
       })
-        .then(({ value }) => {
-          return Notebooks.updateNoteBook(notebook.id, { title: value });
-        })
-        .then((res) => {
-          this.$message.success(res.msg);
-        })
-        .catch(() => {});
     },
     onDelete(id) {
       this.$confirm("确认要删除笔记本吗？", "删除笔记本", {
@@ -105,15 +101,9 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
         closeOnClickModal: false, //点击遮罩层是否关闭弹窗
+      }).then(() => {
+        this.deleteNotebook({notebookId: id});
       })
-        .then(() => {
-          return Notebooks.deleteNoteBook(id);
-        })
-        .then((res) => {
-          this.$message.success(res.msg);
-          // this.notebooks.splice(this.notebooks.indexOf(notebook),1)
-        })
-        .catch(() => {});
     },
   },
 };
