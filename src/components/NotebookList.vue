@@ -18,15 +18,23 @@
               </router-link>
             </el-col>
             <el-col :span="4" :offset="15">
-              <span class="date">
-                {{ friendlyDate(notebook.updatedAt) }}
-              </span>
-              <span class="action">
-                <el-button type="primary" icon="el-icon-edit" circle @click="onEdit(notebook)"></el-button>
-              </span>
-              <span class="action">
-                <el-button type="danger" icon="el-icon-delete" circle @click="onDelete(notebook.id)"></el-button>
-              </span>
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <span class="date">
+                    {{ friendlyDate(notebook.updatedAt) }}
+                  </span>
+                </el-col>
+                <el-col :span="6">
+                  <span class="action">
+                    <el-button type="primary" icon="el-icon-edit" circle @click="onEdit(notebook)"></el-button>
+                  </span>
+                </el-col>
+                <el-col :span="6">
+                  <span class="action">
+                    <el-button type="danger" icon="el-icon-delete" circle @click="onDelete(notebook.id)"></el-button>
+                  </span>
+                </el-col>
+              </el-row>             
             </el-col>
           </el-row>
         </div>
