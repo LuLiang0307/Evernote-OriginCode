@@ -2,11 +2,19 @@ import Notebook from "@/apis/notebooks"
 import { Message } from 'element-ui'
 
 const state = {
-  notebooks: []
+  //传进来的值为真实的空
+  notebooks: null,
+  curBookId: null
 }
 
 const getters = {
-  notebooks: state => state.notebooks
+  notebooks: state => state.notebooks || {},
+  curBook: state =>{
+    if(!Array.isArray(state.notebooks)) return {} //如果为空，则置为对象
+    if(!state.curBookId) return state.notebooks[0] //如果不存在，就选择列表的第一个
+    //返回找到的那一个
+    return state.notebooks.find(notebook => notebook.id == state.curBookId) //等号两边传递的不是同一个数据类型，不能用===
+  }
 }
 
 const mutations = {
@@ -25,19 +33,23 @@ const mutations = {
   
   deleteNotebook(state, payload) {
     state.notebooks = state.notebooks.filter(notebook => notebook.id !== payload.notebookId)
+  },
+
+  setCurBook(state, payload) {
+    state.curBookId = payload.curBookId
   }
 }
 
 const actions = {
   getNotebooks({ commit }) {
-    Notebook.getAll()
+    return Notebook.getAll()
       .then(res => {
         commit('setNotebooks', { notebooks: res.data })
       })
   },
 
   addNotebook({ commit }, payload) {
-    Notebook.addNoteBook({title: payload.title})
+    return Notebook.addNoteBook({title: payload.title})
       .then(res=>{
         console.log(res)
         commit('addNotebook', {notebook: res.data})
@@ -46,7 +58,7 @@ const actions = {
   },
 
   updateNotebook({ commit }, payload) {
-    Notebook.updateNoteBook(payload.notebookId,{ title: payload.title})
+    return Notebook.updateNoteBook(payload.notebookId,{ title: payload.title})
       .then(res =>{
         commit('updateNotebook', {notebookId: payload.notebookId, title: payload.title})
         Message.success(res.msg)
@@ -54,7 +66,7 @@ const actions = {
   },
 
   deleteNotebook({ commit }, payload) {
-    Notebook.deleteNoteBook(payload.notebookId)
+    return Notebook.deleteNoteBook(payload.notebookId)
       .then(res => {
         commit('deleteNotebook', {notebookId: payload.notebookId})
         Message.success(res.msg)
