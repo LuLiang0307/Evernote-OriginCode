@@ -18,19 +18,23 @@ Router.prototype.push = function push(location) {
 export default new Router({
   routes: [{
       path: '/login',
-      component: Login
+      component: Login,
+      name: 'login'
     },
     {
       path: '/notebooks',
-      component: NotebookList
+      component: NotebookList,
+      name: 'notebooks'
     },
     {
       path: '/note',
-      component: NoteDetail
+      component: NoteDetail,
+      name: 'note'
     },
     {
       path: '/trash',
-      component: TrashDetail
+      component: TrashDetail,
+      name: 'trash'
     }
   ]
 })

@@ -11,11 +11,11 @@
         <div class="book-list">
           <el-row :gutter="20" class="notebook" type="flex" align="middle" v-for="(notebook, index) in notebooks" :key="index">
             <el-col :span="6">
-              <router-link :to="`/note?notebookId=${notebook.id}`">
+              <div @click="getNotes(notebook.id)">
                 <span class="iconfont icon-notebook"></span>
                 {{ notebook.title }}
                 <span>{{ notebook.noteCounts }}</span>
-              </router-link>
+              </div>
             </el-col>
             <el-col :span="4" :offset="15">
               <el-row :gutter="20">
@@ -77,6 +77,9 @@ export default {
       'updateNotebook',
       'deleteNotebook'
     ]),
+    getNotes(notebookId){
+      this.$router.push('/note?notebookId='+ notebookId)
+    },
     onCreate() {
       this.$prompt("输入新笔记本标题", "创建笔记本", {
         confirmButtonText: "确定",

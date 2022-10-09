@@ -37,13 +37,22 @@
 </template>
 
 <script>
-import Notebooks from "@/apis/notebooks";
-import Notes from "@/apis/notes";
 import { friendlyDate } from "@/helpers/utils";
-import Bus from '@/helpers/bus'
 import {mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
 export default {
+  created() {
+    //获取所有的notebooks
+    this.getNotebooks()
+      .then(()=>{
+        //设置当前curBook
+        this.setCurBook({ curBookId: this.$route.query.notebookId })
+        //获取所有的notes
+        return this.getNotes({notebookId: this.curBook.id})
+      }).then(()=>{
+        this.setCurNote({ curNoteId: this.$route.query.noteId})
+      })
+  },
   data() {
     return {};
   },
@@ -53,20 +62,13 @@ export default {
       'notes',
       'curBook'
     ])
-  },
-  created() {
-    //获取所有的notebooks
-    this.getNotebooks()
-      .then(()=>{
-        //设置当前curBook
-        this.$store.commit('setCurBook', { curBookId: this.$route.query.notebookId })
-        //获取所有的notes
-        this.getNotes({notebookId: this.curBook.id})
-      })
-  },
+  },  
   methods: {
     friendlyDate,
-
+    ...mapMutations([
+      'setCurBook',
+      'setCurNote'
+    ]),
     ...mapActions([
       'getNotebooks',
       'getNotes',
@@ -88,8 +90,7 @@ export default {
     },
 
     handleRowClick(row) {
-      this.$router.push({path: `/note?noteId=${row.id}&notebookId=${this.curBook.id}`,});
-      this.$emit("noteInfo", this.notes);
+      this.$router.push({path: `/note?noteId=${row.id}&notebookId=${this.curBook.id}`});
     }
   },
 };
