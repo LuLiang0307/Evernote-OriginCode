@@ -44,8 +44,6 @@
 </template>
 
 <script>
-import Auth from "@/apis/auth";
-import Notebooks from "@/apis/notebooks";
 import { friendlyDate } from "@/helpers/utils";
 import { mapState, mapActions, mapGetters } from "vuex";
 
@@ -56,15 +54,8 @@ export default {
     };
   },
   created() {
-    Auth.getInfo().then((res) => {
-      if (!res.isLogin) {
-        this.$router.push("login");
-      }
-    });
-    //  Notebooks.getAll().then((res) => {
-    //     this.notebooks = res.data;
-    //   });
-    this.$store.dispatch("getNotebooks");
+    this.checkLogin({path: '/login'})
+    this.getNotebooks()
   },
   computed: {
     ...mapGetters(["notebooks"]),
@@ -75,7 +66,8 @@ export default {
       'getNotebooks',
       'addNotebook',
       'updateNotebook',
-      'deleteNotebook'
+      'deleteNotebook',
+      'checkLogin'
     ]),
     getNotes(notebookId){
       this.$router.push('/note?notebookId='+ notebookId)

@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import Auth from "@/apis/auth";
 import NoteSidebar from "@/components/NoteSidebar.vue";
 import { friendlyDate } from "@/helpers/utils";
 import _ from "lodash";
@@ -44,11 +43,7 @@ export default {
     };
   },
   created() {
-    Auth.getInfo().then((res) => {
-      if (!res.isLogin) {
-        this.$router.push("login");
-      }
-    });
+    this.checkLogin({path: '/login'})
   },
   computed:{
     ...mapGetters([
@@ -66,7 +61,8 @@ export default {
     ]),
     ...mapActions([
       'updateNote',
-      'deleteNote'
+      'deleteNote',
+      'checkLogin'
     ]),
     onUpdateNote: _.debounce(function () {
       this.updateNote({ noteId: this.curNote.id , title: this.curNote.title, content: this.curNote.content }).then((data) => {

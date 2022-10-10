@@ -11,7 +11,7 @@ const getters = {
   notebooks: state => state.notebooks || {},
   curBook: state =>{
     if(!Array.isArray(state.notebooks)) return {} //如果为空，则置为对象
-    if(!state.curBookId) return state.notebooks[0] //如果不存在，就选择列表的第一个
+    if(!state.curBookId) return state.notebooks[0] || {}//如果不存在，就选择列表的第一个
     //返回找到的那一个
     return state.notebooks.find(notebook => notebook.id == state.curBookId) //等号两边传递的不是同一个数据类型，不能用===
   }

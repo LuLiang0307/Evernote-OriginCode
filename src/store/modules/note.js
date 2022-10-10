@@ -8,7 +8,7 @@ const getters = {
   notes: state => state.notes || {},
   curNote: state =>{
     if(!Array.isArray(state.notes)) return {} //如果为空，则置为对象
-    if(!state.curNoteId) return state.notes[0] //如果不存在，就选择列表的第一个
+    if(!state.curNoteId) return state.notes[0] || {}//如果不存在，就选择列表的第一个
     
     return state.notes.find(note => note.id == state.curNoteId) //等号两边传递的不是同一个数据类型，不能用===
   }
