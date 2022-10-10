@@ -11,7 +11,7 @@
       <el-menu-item index="/trash">
         <i class="iconfont icon-trash"></i><span> 回收站</span>
       </el-menu-item>
-      <el-menu-item index="4" class="logout">
+      <el-menu-item index="/login" class="logout">
         <div title="注销">
           <i class="iconfont icon-logout" @click="logout"></i><span> 注销</span>
         </div>
@@ -41,9 +41,10 @@ export default {
   },
   methods: {
     logout() {
+      console.log('注销')
       Auth.logout().then((data) => {
         Bus.$emit("userInfo", { username: "未登录" });
-        this.$router.push("login");
+        this.$router.push({path: '/login'});
       });
     },
   },
