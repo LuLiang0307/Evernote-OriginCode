@@ -1,4 +1,5 @@
 import Note from '@/apis/notes'
+import { Message } from 'element-ui'
 
 const state = {
   notes: null,

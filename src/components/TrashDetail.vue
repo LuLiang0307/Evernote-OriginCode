@@ -30,77 +30,70 @@
           <el-button class="btn action" @click="onRevert">恢复</el-button>
           <el-button class="btn action" @click="onDelete">彻底删除</el-button>
         </div>
-        <div class="note-title"></div>
+        <div class="note-title">
           <span>{{curTrashNote.title}}</span>
-      </div>
-      <div class="editor">
-        <div class="preview markdown-body" v-html="compiledMarkdown"></div>
+        </div>
+        <div class="editor">
+          <div class="preview markdown-body" v-html="compiledMarkdown"></div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Auth from "@/apis/auth";
 import { friendlyDate } from "@/helpers/utils";
 import MarkdownIt from 'markdown-it'
+import { mapGetters, mapMutations, mapActions} from 'vuex'
 
 let md = new MarkdownIt()
 
 export default {
-  name: "Login",
   data() {
     return {
-      msg: "回收站笔记详情页",
-      curTrashNote: {
-        id: 1,
-        title: '我的笔记本',
-        content: '## hello',
-        createdAt: '2小时前',
-        updatedAt: '一分钟前',
-      },
-      belongTo: '我的笔记本',
-      trashNotes: [
-        {
-          id: 1,
-          title: '我的笔记本',
-          content: '## hello',
-          createdAt: '2小时前',
-          updatedAt: '一分钟前',
-        },
-        {
-          id: 1,
-          title: '我的笔记本',
-          content: '## hello',
-          createdAt: '2小时前',
-          updatedAt: '一分钟前',
-        },
-      ]
+      belongTo: '我的笔记本'
     };
   },
   created() {
-    Auth.getInfo().then((res) => {
-      if (!res.isLogin) {
-        this.$router.push("login");
-      }
-    });
+    this.checkLogin({ path: '/login'})
+    this.getTrashNotes()
+      .then(() => {
+        this.setCurTrashNote({ curTrashNoteId: this.$route.query.noteId })
+      })
   },
   computed:{
+    ...mapGetters([
+      'curTrashNote',
+      'trashNotes'
+    ]),
     compiledMarkdown() {
       return md.render(this.curTrashNote.content || '')
     }
   },
   methods:{
+    ...mapMutations([
+      'setCurTrashNote'
+    ]),
+    ...mapActions([
+      'checkLogin',
+      'getTrashNotes',
+      'revertTrashNote',
+      'deleteTrashNote'
+    ]),
     friendlyDate,
     onRevert(){
-      console.log('revert')
+      this.revertTrashNote({ noteId: this.curTrashNote.id })
     },
     onDelete(){
-      console.log('delete')
+      this.deleteTrashNote({ noteId: this.curTrashNote.id })
     },
     handleRowClick(row) {
       this.$router.push({path: `/trash?noteId=${row.id}`});
     }
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.setCurTrashNote({ curTrashNoteId: to.query.noteId })
+    next()
   }
 };
 </script>
