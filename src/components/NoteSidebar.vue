@@ -19,7 +19,7 @@
     <el-button classs="btn add-note" size="small" @click="onAddNote">添加笔记</el-button>
 
     <div class="menu">
-      <el-table class="menu" :data="notes" :row-style="{ height: 0 + 'px' }" :cell-style="{ padding: 0 + 'px' }" style="width: 100%" :highlight-current-row="true" @row-click="handleRowClick">
+      <el-table class="menu" :data="notes" border :row-style="{ height: 0 + 'px' }" :cell-style="{ padding: 0 + 'px' }" style="width: 100%" :highlight-current-row="true" @row-click="handleRowClick">
         <el-table-column prop="updatedAt" label="更新时间">
           <template slot-scope="scope">
             <div>{{ friendlyDate(scope.row.updatedAt) }}</div>
