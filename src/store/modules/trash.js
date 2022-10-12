@@ -14,6 +14,11 @@ const getters = {
     }else {  
       return state.trashNotes.find(note => note.id == state.curTrashNoteId) || {} 
     }
+  },
+  belongTo: (state, getters, rootState, rootGetters) => {
+    console.log('rootgetters===', rootGetters.notebooks)
+    let notebook = rootGetters.notebooks.find(notebook => notebook.id == getters.curTrashNote.notebookId) || {}
+    return notebook.title || ''
   }
 }
 const mutations = {
